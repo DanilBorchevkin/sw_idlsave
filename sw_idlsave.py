@@ -52,6 +52,10 @@ def process_file(input_folder, filename, output_folder):
 
     for idx_entity,lat_entity in enumerate(sav_data['saved_data']['lat']):
         for idx_lat, lat in enumerate(lat_entity):
+            if (sav_data['saved_data']['fdoy'][idx_entity][[idx_lat]] == 0.0) and (sav_data['saved_data']['on2'][idx_entity][idx_lat] == 0.0) and (sav_data['saved_data']['sza'][idx_entity][idx_lat] == 0.0):
+                # Reject null values
+                continue
+            
             output_list.append([
                 sav_data['saved_data']['lat'][idx_entity][idx_lat],
                 sav_data['saved_data']['lon'][idx_entity][idx_lat],
@@ -64,8 +68,8 @@ def process_file(input_folder, filename, output_folder):
                 sav_data['saved_data']['data'][idx_entity][idx_lat][2],
                 sav_data['saved_data']['data'][idx_entity][idx_lat][3],
                 sav_data['saved_data']['data'][idx_entity][idx_lat][4],
-                str(sav_data['saved_data']['year'][idx_entity]),
-                str(sav_data['saved_data']['orbit'][idx_entity])
+                sav_data['saved_data']['year'][idx_entity].decode('ascii'),
+                sav_data['saved_data']['orbit'][idx_entity].decode('ascii')
             ])
 
     save_to_ascii_file(output_list, output_folder + filename.replace(".", "_") + ".dat")

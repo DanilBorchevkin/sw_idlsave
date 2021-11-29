@@ -77,7 +77,7 @@ def process_file(input_folder, filename, output_folder):
 def main():
     print("Script is started")
 
-    output_list = process_file("./input/", "ON2_2015_079m.sav", "./output/")
+    output_list = process_file("./input/", "ON2_2005_001m.sav", "./output/")
 
     print("Script is finished")
 

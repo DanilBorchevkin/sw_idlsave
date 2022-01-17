@@ -104,25 +104,26 @@ def process_file_prev_format(input_folder, filename, output_folder):
     ])
 
     for idx_slice, _ in enumerate(sav_data['saved_data']['lat']):
-        for idx_lat, val_lat in enumerate(sav_data['saved_data']['lat'][idx_slice]):
-            if (sav_data['saved_data']['doy'][idx_slice] == 0.0) and (sav_data['saved_data']['on2'][idx_entity][idx_lat] == 0.0) and (sav_data['saved_data']['sza'][idx_entity][idx_lat] == 0.0):
-                # Reject null values
-                continue
-            
+        for idx_lat, val_lat in enumerate(sav_data['saved_data']['lat'][idx_slice]): 
+            if  sav_data['saved_data']['lat'][idx_slice][idx_lat] == 0.0 \
+                and sav_data['saved_data']['lon'][idx_slice][idx_lat] == 0.0 \
+                and sav_data['saved_data']['sza'][idx_slice][idx_lat] == 0.0 \
+                and sav_data['saved_data']['on2'][idx_slice][idx_lat] == 0.0 :
+                    continue       
             output_list.append([
-                sav_data['saved_data']['lat'][idx_entity][idx_lat],
-                sav_data['saved_data']['lon'][idx_entity][idx_lat],
-                sav_data['saved_data']['sza'][idx_entity][idx_lat],
-                sav_data['saved_data']['on2'][idx_entity][idx_lat],
-                sav_data['saved_data']['fdoy'][idx_entity][idx_lat],
-                sav_data['saved_data']['points'][idx_entity],
-                sav_data['saved_data']['data'][idx_entity][idx_lat][0],
-                sav_data['saved_data']['data'][idx_entity][idx_lat][1],
-                sav_data['saved_data']['data'][idx_entity][idx_lat][2],
-                sav_data['saved_data']['data'][idx_entity][idx_lat][3],
-                sav_data['saved_data']['data'][idx_entity][idx_lat][4],
-                sav_data['saved_data']['year'][idx_entity].decode('ascii'),
-                sav_data['saved_data']['orbit'][idx_entity].decode('ascii')
+                sav_data['saved_data']['lat'][idx_slice][idx_lat],
+                sav_data['saved_data']['lon'][idx_slice][idx_lat],
+                sav_data['saved_data']['sza'][idx_slice][idx_lat],
+                sav_data['saved_data']['on2'][idx_slice][idx_lat],
+                sav_data['saved_data']['doy'][idx_slice].decode('ascii'),
+                sav_data['saved_data']['points'][idx_slice],
+                sav_data['saved_data']['d_lat'][idx_slice],
+                sav_data['saved_data']['d_lon'][idx_slice],
+                sav_data['saved_data']['ut'][idx_slice][idx_lat],
+                sav_data['saved_data']['day'][idx_slice],
+                sav_data['saved_data']['month'][idx_slice],
+                sav_data['saved_data']['year'][idx_slice].decode('ascii'),
+                sav_data['saved_data']['orbit'][idx_slice].decode('ascii')
             ])
 
     save_to_ascii_file(output_list, output_folder + filename.replace(".", "_") + ".dat")
@@ -139,6 +140,7 @@ def main():
     is_file_parsed = False
 
     try:
+        print("Try to parse as past format...")
         process_file_last_format(INPUT_PATH, INPUT_FILENAME, OUTPUT_PATH)
         is_file_parsed = True
     except Exception as e:
@@ -146,6 +148,7 @@ def main():
         
     if not is_file_parsed:
         try:
+            print("Try to parse as prevous format...")
             process_file_prev_format(INPUT_PATH, INPUT_FILENAME, OUTPUT_PATH)
             is_file_parsed = True
         except Exception as e:
